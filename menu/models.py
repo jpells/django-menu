@@ -28,15 +28,14 @@ class Menu(models.Model):
             current += 10  
   
 class MenuItem(models.Model):  
-    menu = models.ForeignKey(Menu)  
-    order = models.IntegerField()  
-    link_url = models.CharField(max_length=100, help_text='URL or URI to the content, eg /about/ or http://foo.com/')  
-    title = models.CharField(max_length=100)  
-    login_required = models.BooleanField(blank=True, null=True)
-    staff_required = models.BooleanField(blank=True, null=True)
+    menu = models.ForeignKey(Menu, edit_inline=models.TABULAR, num_in_admin=3, num_extra_on_change=3)  
+    order = models.IntegerField(core=True)  
+    url_name = models.CharField(max_length=100, help_text='URL Name for Reverse Lookup, eg comments.comment_was_posted', blank=True, null=True, core=True)
+    view_path = models.CharField(max_length=100, help_text='Python Path to View to Render, eg django.contrib.admin.views.main.index', blank=True, null=True, core=True)
+    link_url = models.CharField(max_length=100, help_text='URL or URI to the content, eg /about/ or http://foo.com/', blank=True, null=True, core=True)
+    title = models.CharField(max_length=100, core=True)
+    login_required = models.BooleanField(blank=True, null=True, core=True)
+    staff_required = models.BooleanField(blank=True, null=True, core=True)
        
-    class Admin:  
-        pass  
-   
     def __unicode__(self):  
         return "%s %s. %s" % (self.menu.slug, self.order, self.title)  
