@@ -20,7 +20,7 @@ class MenuObject(template.Node):
    
     def render(self, context):  
         current_path = template.resolve_variable('request.path', context)  
-        user = template.resolve_variable('request.user', context)  
+        user = template.resolve_variable('user', context)  
         context['menuitems'] = get_items(self.menu_name, current_path, user)  
         return ''  
      
@@ -36,7 +36,7 @@ class SubMenuObject(template.Node):
    
     def render(self, context):  
         current_path = template.resolve_variable('request.path', context)  
-        user = template.resolve_variable('request.user', context)  
+        user = template.resolve_variable('user', context)  
         menu = False  
         for m in Menu.objects.filter(base_url__isnull=False):  
             if m.base_url and current_path.startswith(m.base_url):  
