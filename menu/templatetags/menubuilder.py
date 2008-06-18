@@ -1,6 +1,5 @@
 from menu.models import Menu, MenuItem  
 from django import template  
-from django.core import urlresolvers
 
 register = template.Library()  
    
@@ -52,14 +51,9 @@ class SubMenuObject(template.Node):
 def get_items(menu, current_path, user):  
     menuitems = []  
     for i in MenuItem.objects.filter(menu__slug=menu).order_by('order'):  
-        current = ( i.link_url != '/' and current_path.startswith(i.link_url)) or ( i.link_url == '/' and current_path == '/' )  
+        i.current = ( i.link_url != '/' and current_path.startswith(i.link_url)) or ( i.link_url == '/' and current_path == '/' )  
         if (not i.staff_required or (i.staff_required and user.is_staff)) and (not i.login_required or (i.login_required and user.is_authenticated)):
-            if i.url_name:
-                menuitems.append({'url': urlresolvers.reverse(i.url_name), 'title': i.title, 'current': current,})
-            elif i.view_path:
-                menuitems.append({'url': urlresolvers.reverse(i.view_path), 'title': i.title, 'current': current,})
-            elif i.link_url:
-                menuitems.append({'url': i.link_url, 'title': i.title, 'current': current,})  
+            menuitems.append(i)
     return menuitems  
    
 register.tag('menu', build_menu)  

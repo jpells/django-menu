@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import ugettext as _
+from django.core import urlresolvers
 
 class Menu(models.Model):
     name = models.CharField(max_length=100)
@@ -40,3 +41,11 @@ class MenuItem(models.Model):
  
     def __unicode__(self):
         return _("%s %s. %s" % (self.menu.slug, self.order, self.title))
+
+    def get_absolute_url(self):
+        if self.url_name:
+            return urlresolvers.reverse(self.url_name)
+        elif self.view_path:
+            return urlresolvers.reverse(self.view_path)
+        elif self.link_url:
+            return self.link_url
